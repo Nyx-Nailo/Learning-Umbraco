@@ -1,0 +1,22 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = "Layout.cshtml";
+    var hasHeaderImages = Model.HasValue("headerImages");
+}
+
+@if (Model is IHeaderComposition)
+{
+    @(Html.Partial("header"))
+    
+}
+else
+{
+    <section class="section section--themed section--header section--content-center-bottom">
+        <div class="section__hero-content">
+            <!-- Replace with Model.Name value -->
+            <h1 class="no-air">@Model.Name</h1>
+        </div>
+    </section>
+}
+@RenderBody()

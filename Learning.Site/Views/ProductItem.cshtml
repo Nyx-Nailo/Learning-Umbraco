@@ -1,0 +1,29 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ProductItem>
+@{
+	Layout = "ChildPage.cshtml";
+	
+}
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="col-md-12">
+            @await Html.GetBlockGridHtmlAsync(Model.Product)
+        </div>
+
+
+
+        <!--<div class="col-md-3">
+
+            
+            <nav class="nav-bar nav-bar--list">
+                1
+            </nav>
+
+        </div>-->
+
+
+    </div>
+</section>

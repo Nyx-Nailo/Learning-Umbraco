@@ -1,0 +1,98 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.NewsArea>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@using Examine
+@inject IExamineManager ExamineManager
+
+
+
+@{
+    Layout = "ChildPage.cshtml";
+    var articles = Model?.Children<NewsArticle>()?.OrderByDescending(a => a.CreateDate);
+
+    var searchTerm = Context.Request.Query["searchTerm"].ToString();
+
+    if (!string.IsNullOrEmpty(searchTerm) && Model is not null)
+    {
+        articles = articles?.Where(a => a.Categories != null && a.Categories.Any(c => c.ToLower().Contains(searchTerm.ToLower())) ||
+                                        (a.Summary ?? "").ToLower().Contains(searchTerm.ToLower()) ||
+                                        a.Name.ToLower().Contains(searchTerm.ToLower())).OrderByDescending(a => a.CreateDate);
+    }
+
+
+
+
+    int articleCount = articles?.Count() ?? 0;
+    int articlesPerPage = 5;
+    articlesPerPage = articlesPerPage == 0 ? 5 : articlesPerPage;
+    int pages = articleCount / articlesPerPage;
+    pages = (articleCount % articlesPerPage) > 0 ? pages + 1 : pages;
+    int index = 0;
+    if (Context.Request.Method == "POST")
+    {
+        var buttonValue = Context.Request.Form["pageButton"];
+        index = Convert.ToInt32(buttonValue) * articlesPerPage;
+    }
+    
+}
+
+<!-- News area header -->
+
+<!-- end of header -->
+
+<section class="section">
+    <div class="container">
+
+        <div class="col-md-9">
+            @Html.Partial("SearchBar")
+
+            <!-- Start of news article listing -->
+            <div class="articles">
+                @if (articles is not null && (articles?.Count() ?? 0) > 0)
+                {
+                    for (int i = index; i < index + articlesPerPage; i++)
+                    {
+                        if (i >= articleCount) break;
+                        var article = articles?.ToList()[i];
+                        if (article is not null)
+                        {
+                            <!-- Start of news article -->
+                            <a href="@article.Url()" class="article article-with-image" style="background-color:lightgray">
+                                <div class="article-info">
+                                    <div class="article-meta">
+                                        <small class="article-date">@article.CreateDate</small>
+                                        <small class="article-cat">@string.Join(", ", article.Categories ?? new List<string>())</small>
+                                    </div>
+                                    <h3 class="article-title">@article.Name</h3>
+                                    <div class="article-excerpt">
+                                        @article.Summary
+                                    </div>
+                                </div>
+
+                                <!--- optional  - if the article has a image assigned to it -->
+                                <div class="article-image" style="background-image: url('@Url.GetCropUrl(article.Image, "Grid", false)')"></div>
+                            </a>
+                            <!-- End of article -->
+                        }
+                    }
+                }
+                else
+                {
+                    <p>No articles found.</p>
+                }
+            </div>
+            
+            <div class="container">
+                <form method="post">
+                    @for (int i = 1; i <= pages; i++)
+                    {
+                        <button type="submit" value="@(i - 1)" name="@("pageButton")">@i</button>
+                    }
+                </form>
+            </div>
+            @Html.Partial("SearchBar")
+            <!-- End of news article listing -->
+        </div>
+
+    </div>
+</section>

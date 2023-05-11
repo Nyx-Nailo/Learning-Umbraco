@@ -1,0 +1,16 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage;
+@using System.Web
+@using Learning.Site.Services
+
+@{
+    Layout = null;
+    var articles = Model?.Children<NewsArticle>()?.OrderByDescending(x => x.CreateDate);
+    var searchService = new SearchService();
+}
+
+<div class="container">
+    <form method="get">
+        <input type="text" name="searchTerm" value="" placeholder="Search">
+        <button type="submit">Search</button>
+    </form>
+</div>

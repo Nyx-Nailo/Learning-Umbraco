@@ -1,0 +1,40 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<IHeaderComposition>;
+@{
+	var mediaItems = Model.HeaderImages;
+	var name = Umbraco.AssignedContentItem.Name;
+}
+
+<!-- Script for the image rotator -->
+<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function(event) {
+		var slides = document.querySelectorAll('#header-images .section__hero-background');
+		var currentSlide = 0;
+		slides[currentSlide].classList.add('showing');
+		var slideInterval = setInterval(nextSlide,3000);
+
+		function nextSlide() {
+			slides[currentSlide].classList.remove('showing');
+			currentSlide = (currentSlide+1)%slides.length;
+			slides[currentSlide].classList.add('showing');
+		}
+	});
+</script>
+
+<!-- section to display the image carousel-->
+<section id="header-images" class="section section--themed section--header section--content-center-bottom">
+
+	@if (mediaItems != null)
+	{
+		foreach (var x in mediaItems)
+		{
+			<div class="section__hero-background background-image-full"
+				 style="background-image: url(@x.Url())">
+			</div>
+		}
+	}
+
+	<div class="section__hero-content">
+		<h1>@(!string.IsNullOrWhiteSpace(Model.HeaderTitle) ? Model.HeaderTitle : (name ?? "Missing Title"))</h1>
+		
+	</div>
+</section>

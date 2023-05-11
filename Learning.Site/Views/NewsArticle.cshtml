@@ -1,0 +1,61 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.NewsArticle>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@{
+    Layout = "ChildPage.cshtml";
+    var articles = Model?.Ancestor<NewsArea>()?.Children<NewsArticle>()?.OrderByDescending(x => x.CreateDate).ToList();
+    int index = articles?.IndexOf(Model) ?? 0;
+    articles = articles?.Skip(index >= 3 ? index - 2 : 0).Take(5).ToList();
+}
+
+
+
+
+
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="col-md-9">
+
+            <article>
+
+                <h4>
+                    <!-- Insert the Summary field Here -->
+                    @Model?.Summary
+                </h4>
+
+                <h5>
+                    <!-- Insert the Categories field Here -->
+                    @String.Join(", ", Model?.Categories ?? new List<string>())
+                </h5>
+
+                <!-- Insert the BodyText field here -->
+                @Model?.BodyText
+
+
+            </article>
+        </div>
+
+
+
+        <div class="col-md-3">
+
+            <!-- Go futher and implement the article navigation  here -->
+            <nav class="nav-bar nav-bar--list">
+                @{
+                    if(articles is not null)
+                        foreach(var item in articles)
+                        {
+                            <a class="nav-link nav-link--black nav-link--air-bottom @(item.Equals(Model) ? "nav-link--active" : null)"
+                               href="@item.Url()">@item.Name</a>
+                        }
+                }
+            </nav>
+
+        </div>
+
+
+    </div>
+</section>

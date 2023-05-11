@@ -1,0 +1,39 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.TextPage>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@{
+	Layout = "ChildPage.cshtml";
+}
+
+<!-- Default header for text pages -->
+
+<!-- End of header section-->
+
+<section class="section">
+    <div class="container">
+
+        <!-- Beginning of Textpage content section -->
+        <div class="col-md-9">
+            <article>
+                <!-- Replace with "bodyText" value -->
+                @Model.BodyText
+            </article>
+        </div>
+        <!-- End of Textpage content section -->
+
+        <!-- Beginning of secondary navigation -->
+        <div class="col-md-3">
+            <nav class="nav-bar nav-bar--list">
+
+                @foreach (var child in Model.AncestorOrSelf(2).Children)
+                {
+                    <a class="nav-link nav-link--black nav-link--air-bottom @child.IsAncestorOrSelf(Model, "nav-link--active")" href="@child.Url()">@child.Name</a>
+                }
+                
+
+            </nav>
+        </div>
+        <!-- End of secondary navigation -->
+
+    </div>
+</section>

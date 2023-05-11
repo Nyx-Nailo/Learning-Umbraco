@@ -1,0 +1,16 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem>
+@{
+    var typedMediaPickerSingle = Model.Content.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("image");
+    if (typedMediaPickerSingle != null)
+    {
+        <div class="col-md-6" style="float:left;">
+            <img src="@typedMediaPickerSingle.MediaUrl()" style="object-fit:cover; width:100%; height:100%;" />
+        </div>
+    }
+    else
+    {
+        <p>Missing image</p>
+
+    }
+}
